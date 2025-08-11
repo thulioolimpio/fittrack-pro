@@ -1,0 +1,383 @@
+/* Dashboard Styles */
+.dashboard {
+  padding: 2rem 1rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  animation: fadeIn 0.5s ease;
+}
+
+/* Dashboard Header */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.dashboard-header h2 {
+  font-size: 2rem;
+  color: var(--dark);
+  margin-bottom: 0.5rem;
+  font-weight: 800;
+}
+
+.dashboard-header p {
+  color: var(--gray-dark);
+  font-size: 1rem;
+}
+
+.user-stats {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.stat-card {
+  background: white;
+  padding: 1.25rem 1.75rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--light);
+  min-width: 180px;
+  text-align: center;
+}
+
+.stat-card span {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--gray-dark);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-card strong {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+/* Dashboard Grid Layout */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.dashboard-grid > * {
+  grid-column: span 12;
+}
+
+@media (min-width: 1024px) {
+  .dashboard-grid {
+    grid-template-rows: auto auto;
+  }
+  
+  .today-card {
+    grid-column: span 6;
+  }
+  
+  .progress-card {
+    grid-column: span 4;
+  }
+  
+  .quick-actions {
+    grid-column: span 8;
+  }
+}
+
+/* Today Cards */
+.today-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.card-header h3 {
+  font-size: 1.5rem;
+  color: var(--dark);
+  margin: 0;
+  font-weight: 700;
+}
+
+/* Workout Preview */
+.workout-preview {
+  flex: 1;
+}
+
+.workout-preview h4 {
+  font-size: 1.25rem;
+  color: var(--primary);
+  margin-bottom: 1rem;
+}
+
+.workout-preview ul {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 1.5rem;
+}
+
+.workout-preview li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--light);
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Progress Bars */
+.progress-bar {
+  height: 8px;
+  background: var(--light);
+  border-radius: 4px;
+  margin: 0.75rem 0;
+  overflow: hidden;
+}
+
+.progress-bar.small {
+  height: 6px;
+}
+
+.progress-bar .progress {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  border-radius: 4px;
+  transition: width 0.6s ease;
+}
+
+/* Nutrition Preview */
+.nutrition-preview {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .nutrition-preview {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.macros {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.macro {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.meals-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.meal {
+  background: var(--light);
+  padding: 0.75rem 1rem;
+  border-radius: var(--border-radius-sm);
+}
+
+.meal strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: var(--dark);
+}
+
+/* Progress Card */
+.progress-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.mini-chart {
+  height: 180px;
+  margin: 1rem 0;
+}
+
+.progress-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: auto;
+}
+
+.progress-stats div {
+  background: var(--light);
+  padding: 1rem;
+  border-radius: var(--border-radius-sm);
+  text-align: center;
+}
+
+.progress-stats span {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--gray-dark);
+  margin-bottom: 0.5rem;
+}
+
+.progress-stats strong {
+  font-size: 1.25rem;
+  color: var(--primary);
+}
+
+/* Quick Actions */
+.quick-actions {
+  display: flex;
+  flex-direction: column;
+}
+
+.action-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.action-buttons .button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.motivational-quote {
+  margin-top: auto;
+  padding: 1.5rem;
+  background: var(--primary-light);
+  border-radius: var(--border-radius-sm);
+  text-align: center;
+}
+
+.motivational-quote p {
+  font-style: italic;
+  color: var(--dark);
+  margin-bottom: 0.5rem;
+}
+
+.motivational-quote small {
+  color: var(--gray-dark);
+  font-size: 0.875rem;
+}
+
+/* Recent Activity */
+.recent-activity h3 {
+  font-size: 1.5rem;
+  color: var(--dark);
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+}
+
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--light);
+  transition: var(--transition);
+}
+
+.activity-item:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.activity-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.activity-icon.workout {
+  background: rgba(67, 97, 238, 0.1);
+  color: var(--primary);
+}
+
+.activity-icon.meal {
+  background: rgba(247, 37, 133, 0.1);
+  color: var(--secondary);
+}
+
+.activity-icon.measurement {
+  background: rgba(76, 201, 240, 0.1);
+  color: var(--accent);
+}
+
+.activity-info {
+  flex: 1;
+}
+
+.activity-info strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: var(--dark);
+}
+
+.activity-info span {
+  font-size: 0.875rem;
+  color: var(--gray-dark);
+}
+
+/* Responsividade */
+@media (max-width: 1024px) {
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .user-stats {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .stat-card {
+    min-width: 140px;
+    padding: 1rem;
+  }
+  
+  .action-buttons {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-header h2 {
+    font-size: 1.75rem;
+  }
+  
+  .user-stats {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .stat-card {
+    width: 100%;
+  }
+}

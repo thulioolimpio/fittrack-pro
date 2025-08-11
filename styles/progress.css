@@ -1,0 +1,193 @@
+/* Estilos Específicos para Progress Page */
+.progress {
+  padding: 2rem 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  animation: fadeIn 0.5s ease;
+}
+
+.progress h2 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  font-weight: 800;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: -0.5px;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.progress h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  border-radius: 2px;
+}
+
+/* Card Header Aprimorado */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.card-header h4 {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.25rem;
+  color: var(--dark);
+  margin: 0;
+}
+
+.card-header h4 svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+}
+
+/* Container de Gráficos */
+.chart-container {
+  height: 300px;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+/* Input de Métricas */
+.metric-input {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.metric-input .form-control {
+  flex: 1;
+}
+
+/* Medidas Corporais */
+.measurements {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+.measurements .form-group {
+  margin-bottom: 0;
+}
+
+.measurements label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: var(--dark);
+}
+
+.measurements label svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2;
+}
+
+/* Rastreador de Água */
+.water-tracker {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.water-tracker .button {
+  flex: 1;
+  min-width: 100px;
+}
+
+/* Modal de Peso */
+#weight-modal .form-group {
+  margin-bottom: 1.25rem;
+}
+
+#weight-modal textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Ajustes para Selects */
+.form-control[style*="width: auto"] {
+  width: auto !important;
+  min-width: 180px;
+}
+
+/* Ícones nos Botões */
+.button svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2;
+}
+
+/* Efeitos Específicos para Progress Page */
+.card:hover .chart-container {
+  transform: scale(1.02);
+  transition: var(--transition);
+}
+
+/* Responsividade Aprimorada */
+@media (max-width: 768px) {
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .card-header .form-control {
+    width: 100%;
+  }
+  
+  .metric-input {
+    flex-direction: column;
+  }
+  
+  .water-tracker .button {
+    min-width: calc(50% - 0.5rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .progress h2 {
+    font-size: 2rem;
+  }
+  
+  .water-tracker .button {
+    min-width: 100%;
+  }
+  
+  .chart-container {
+    height: 250px;
+  }
+}
+
+/* Animação para os Gráficos */
+@keyframes chartEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.chart-container canvas {
+  animation: chartEntrance 0.6s ease-out;
+}

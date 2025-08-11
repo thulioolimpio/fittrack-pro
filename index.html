@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitTrack Pro - Your Fitness Companion</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="icon" href="assets/imagens/28c8288e-2661-49c0-a09c-b753f473003f.png">
+</head>
+<body>
+    <header class="header">
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <img src="assets/imagens/28c8288e-2661-49c0-a09c-b753f473003f.png" alt="FitTrack Pro Logo">
+                <span class="logo-text">FitTrack Pro</span>
+            </a>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="#" class="nav-link" data-page="dashboard">Dashboard</a></li>
+                    <li><a href="#" class="nav-link" data-page="workout">Workouts</a></li>
+                    <li><a href="#" class="nav-link" data-page="meals">Nutrition</a></li>
+                    <li><a href="#" class="nav-link" data-page="progress">Progress</a></li>
+                    <li><a href="#" class="nav-link" data-page="planner">Planner</a></li>
+                </ul>
+            </nav>
+            <div class="auth-buttons">
+                <button id="login-btn" class="btn btn-primary">Login</button>
+                <button id="register-btn" class="btn btn-secondary">Register</button>
+                <button id="logout-btn" class="btn btn-primary" style="display:none;">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <main id="app-container" class="container">
+        <!-- Dynamic content will be loaded here -->
+        <section id="auth-section" class="form-container">
+            <div class="form-header">
+                <h2 class="form-title">Welcome to FitTrack Pro</h2>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control" placeholder="Password" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </div>
+            </form>
+            <form id="register-form" style="display:none;">
+                <div class="form-group">
+                    <label class="form-label">Name</label>
+                    <input type="text" class="form-control" placeholder="Name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control" placeholder="Password" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Age</label>
+                    <input type="number" class="form-control" placeholder="Age" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Height (cm)</label>
+                    <input type="number" class="form-control" placeholder="Height (cm)" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Weight (kg)</label>
+                    <input type="number" class="form-control" placeholder="Weight (kg)" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Fitness Goal</label>
+                    <select id="fitness-goal" class="form-control">
+                        <option value="weight-loss">Weight Loss</option>
+                        <option value="muscle-gain">Muscle Gain</option>
+                        <option value="maintenance">Maintenance</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </div>
+            </form>
+            <p id="toggle-auth" class="text-center mt-3">Don't have an account? <a href="#" class="text-primary">Register now</a></p>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p class="text-center">© 2023 FitTrack Pro | Fitness & Nutrition Tracker</p>
+        </div>
+    </footer>
+
+    <script type="module" src="scripts/main.mjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>
