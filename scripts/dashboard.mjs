@@ -359,14 +359,18 @@ function initWeightChart() {
 
 function setupEventListeners() {
     // Start Workout
-    document.getElementById('start-workout')?.addEventListener('click', () => {
-        const todayWorkout = api.getTodayWorkout();
-        if (todayWorkout) {
-            showAlert(`Continuing ${todayWorkout.type} workout!`, 'success');
-        } else {
-            showAlert('Redirecting to workout planner...', 'warning');
-        }
-    });
+    document.getElementById('plan-workout')?.addEventListener('click', async () => {
+    try {
+        const { loadPlannerPage } = await import('./planner.mjs');
+        loadPlannerPage(); // Note que agora usamos o nome correto da função
+    } catch (error) {
+        console.error('Error loading planner:', error);
+        showAlert('Failed to load workout planner', 'error');
+        
+        // Fallback alternativo caso ainda haja problemas
+        window.location.href = './planner.html';
+    }
+});
 
     // Plan Workout
     document.getElementById('plan-workout')?.addEventListener('click', () => {
