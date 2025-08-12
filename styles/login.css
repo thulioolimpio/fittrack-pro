@@ -1,0 +1,178 @@
+/* styles/login.css */
+
+/* Apenas estilos para a seção de autenticação */
+#auth-section {
+    width: 100%;
+    max-width: 480px;
+    margin: 2rem auto;
+    padding: 2.5rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+#auth-section .form-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+#auth-section .form-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, #4361ee 0%, #4cc9f0 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* Estilos específicos para os formulários */
+#login-form, 
+#register-form {
+    margin-top: 1.5rem;
+}
+
+#auth-section .form-group {
+    margin-bottom: 1.5rem;
+}
+
+#auth-section .form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #334155;
+    font-size: 0.875rem;
+}
+
+#auth-section .form-control {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+#auth-section .form-control:focus {
+    outline: none;
+    border-color: #4361ee;
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+}
+
+#auth-section .form-actions {
+    margin-top: 2rem;
+}
+
+#auth-section .btn {
+    width: 100%;
+    padding: 0.875rem;
+    border-radius: 8px;
+}
+
+#auth-section #toggle-auth {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #64748b;
+    font-size: 0.875rem;
+}
+
+#auth-section #toggle-auth a {
+    color: #4361ee;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+#auth-section #toggle-auth a:hover {
+    text-decoration: underline;
+}
+
+/* Efeitos de transição entre formulários */
+#register-form {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+/* styles/header-buttons.css */
+
+/* Estilo específico para os botões de autenticação no header */
+.auth-buttons {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.auth-buttons .btn {
+    padding: 0.5rem 1.25rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+}
+
+/* Botão Login */
+.auth-buttons .btn-primary {
+    background: #4361ee;
+    color: white;
+    box-shadow: 0 2px 4px rgba(67, 97, 238, 0.2);
+}
+
+.auth-buttons .btn-primary:hover {
+    background: #3a56d4;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(67, 97, 238, 0.25);
+}
+
+/* Botão Register */
+.auth-buttons .btn-secondary {
+    background: #f72585;
+    color: white;
+    box-shadow: 0 2px 4px rgba(247, 37, 133, 0.2);
+}
+
+.auth-buttons .btn-secondary:hover {
+    background: #e5177b;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(247, 37, 133, 0.25);
+}
+
+/* Efeito ao clicar */
+.auth-buttons .btn:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .auth-buttons {
+        gap: 0.5rem;
+    }
+    
+    .auth-buttons .btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.8125rem;
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    #auth-section {
+        padding: 1.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    #auth-section {
+        padding: 1.5rem;
+        margin: 1rem auto;
+    }
+    
+    #auth-section .form-title {
+        font-size: 1.5rem;
+    }
+}
