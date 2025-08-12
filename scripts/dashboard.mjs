@@ -1,23 +1,19 @@
 import { api } from './api.mjs';
 
-// Funções auxiliares
+// Helper Functions
 function showAlert(message, type = 'success') {
     const alertEl = document.createElement('div');
     alertEl.className = `custom-alert ${type}`;
     alertEl.innerHTML = `
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            ${type === 'success' ? '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/> <polyline points="22 4 12 14.01 9 11.01"/>' : 
-             type === 'warning' ? '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/> <line x1="12" y1="9" x2="12" y2="13"/> <line x1="12" y1="17" x2="12.01" y2="17"/>' :
-             '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/> <line x1="12" y1="9" x2="12" y2="13"/> <line x1="12" y1="17" x2="12.01" y2="17"/>'}
+            ${type === 'success' ? '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/> <polyline points="22 4 12 14.01 9 11.01"/>' :
+            type === 'warning' ? '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/> <line x1="12" y1="9" x2="12" y2="13"/> <line x1="12" y1="17" x2="12.01" y2="17"/>' :
+                '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/> <line x1="12" y1="9" x2="12" y2="13"/> <line x1="12" y1="17" x2="12.01" y2="17"/>'}
         </svg>
         <span>${message}</span>
     `;
-    
     document.body.appendChild(alertEl);
-    
-    setTimeout(() => {
-        alertEl.remove();
-    }, 3500);
+    setTimeout(() => alertEl.remove(), 3500);
 }
 
 function showConfirm(message, callback) {
@@ -33,58 +29,51 @@ function showConfirm(message, callback) {
             </div>
         </div>
     `;
-    
     document.body.appendChild(confirmModal);
     confirmModal.style.display = 'block';
-    
-    document.getElementById('confirm-cancel').addEventListener('click', () => {
-        confirmModal.remove();
-    });
-    
+
+    document.getElementById('confirm-cancel').addEventListener('click', () => confirmModal.remove());
     document.getElementById('confirm-ok').addEventListener('click', () => {
         callback();
         confirmModal.remove();
     });
-    
     confirmModal.addEventListener('click', (e) => {
-        if (e.target === confirmModal) {
-            confirmModal.remove();
-        }
+        if (e.target === confirmModal) confirmModal.remove();
     });
 }
 
 export function loadDashboard() {
-    // Carrega CSS
+    // Load CSS
     const link = document.createElement('link');
     link.rel = 'stylesheet';
     link.href = 'styles/dash.css';
     document.head.appendChild(link);
 
-    // Obtém dados do usuário e do dia
+    // Get user data
     const user = api.getCurrentUser();
     const todayWorkout = api.getTodayWorkout();
     const todayMeals = api.getTodayMeals();
     const waterIntake = api.getWaterIntake();
 
-    // Calcula totais de nutrição
+    // Calculate nutrition totals
     const nutritionTotals = todayMeals.reduce((acc, meal) => {
         acc.calories += meal.calories || 0;
         acc.protein += meal.protein || 0;
         return acc;
     }, { calories: 0, protein: 0 });
 
-    // Calcula progresso do workout
-    const workoutProgress = todayWorkout ? 
-        Math.round((todayWorkout.exercises.reduce((sum, ex) => sum + ex.completed, 0) / 
-                  (todayWorkout.exercises.length * 3) * 100)) : 0;
+    // Calculate workout progress
+    const workoutProgress = todayWorkout ?
+        Math.round((todayWorkout.exercises.reduce((sum, ex) => sum + ex.completed, 0) /
+            (todayWorkout.exercises.length * 3) * 100)) : 0;
 
-    // Renderiza o dashboard
+    // Render dashboard
     const appContainer = document.getElementById('app-container');
     appContainer.innerHTML = `
         <section class="dashboard">
             <div class="dashboard-header">
                 <div class="header-text">
-                    <h2>Welcome back, ${user.name}</h2>
+                    <h2>Welcome , ${user.name}</h2>
                     <p>Today is ${new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
                 </div>
                 <div class="user-stats">
@@ -330,19 +319,19 @@ export function loadDashboard() {
             </div>
         </div>
         
-        <!-- Edit Weight/Goal Modal -->
+        <!-- Edit Weight/Goal Modal - Fixed Version -->
         <div id="edit-modal" class="modal">
             <div class="modal-content">
                 <span class="close-modal">&times;</span>
                 <h3 id="edit-modal-title">Edit</h3>
                 <form id="edit-form">
-                    <div class="form-group" id="weight-field" style="display: none;">
+                    <div class="form-group" id="weight-field">
                         <label>Weight (kg)</label>
-                        <input type="number" id="edit-weight" step="0.1" required>
+                        <input type="number" id="edit-weight" step="0.1">
                     </div>
                     <div class="form-group" id="goal-field" style="display: none;">
                         <label>Goal</label>
-                        <select id="edit-goal" required>
+                        <select id="edit-goal">
                             <option value="lose-weight">Lose Weight</option>
                             <option value="gain-muscle">Gain Muscle</option>
                             <option value="maintain">Maintain</option>
@@ -354,10 +343,10 @@ export function loadDashboard() {
         </div>
     `;
 
-    // Inicializa o gráfico (simulado)
+    // Initialize chart
     initWeightChart();
 
-    // Adiciona event listeners
+    // Setup event listeners
     setupEventListeners();
 }
 
@@ -409,7 +398,7 @@ function setupEventListeners() {
             protein: parseInt(document.getElementById('meal-protein').value) || 0,
             id: Date.now()
         };
-        
+
         api.addMeal(meal);
         mealModal.style.display = 'none';
         showAlert('Meal logged successfully!', 'success');
@@ -417,20 +406,29 @@ function setupEventListeners() {
     });
 
     // Delete Meal
+    // No setupEventListeners() do dashboard.mjs
+
+    // Delete Meal - Versão corrigida
     document.querySelectorAll('.delete-meal').forEach(btn => {
         btn.addEventListener('click', (e) => {
-            const mealId = parseInt(e.currentTarget.getAttribute('data-meal-id'));
-            showConfirm('Are you sure you want to delete this meal?', () => {
-                if (api.removeMeal(mealId)) {
-                    showAlert('Meal deleted successfully!', 'success');
-                    loadDashboard();
-                } else {
-                    showAlert('Failed to delete meal', 'error');
+            e.stopPropagation(); // Impede a propagação do evento
+            const mealId = e.currentTarget.getAttribute('data-meal-id');
+
+            showConfirm('Are you sure you want to delete this meal?', async () => {
+                try {
+                    if (await api.removeMeal(mealId)) {
+                        showAlert('Meal deleted successfully!', 'success');
+                        loadDashboard(); // Recarrega o dashboard para mostrar as atualizações
+                    } else {
+                        showAlert('Failed to delete meal', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error deleting meal:', error);
+                    showAlert('An error occurred while deleting the meal', 'error');
                 }
             });
         });
     });
-
     // Complete Exercise
     document.querySelectorAll('.complete-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -465,13 +463,13 @@ function setupEventListeners() {
                 </div>
             </div>
         `;
-        
+
         document.body.appendChild(waterInput);
-        
+
         document.getElementById('water-cancel').addEventListener('click', () => {
             waterInput.remove();
         });
-        
+
         document.getElementById('water-submit').addEventListener('click', () => {
             const amount = parseInt(document.getElementById('water-amount').value);
             if (amount && amount > 0) {
@@ -489,36 +487,48 @@ function setupEventListeners() {
         showAlert('Redirecting to your workout and nutrition plan...', 'warning');
     });
 
-    // Edit Buttons (Weight/Goal)
+    // Edit Buttons (Weight/Goal) - Fixed Version
     document.querySelectorAll('.edit-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const type = e.currentTarget.getAttribute('data-type');
             const editModal = document.getElementById('edit-modal');
             const user = api.getCurrentUser();
-            
+
+            // Reset form and hide all fields first
+            document.getElementById('edit-form').reset();
+            document.getElementById('weight-field').style.display = 'none';
+            document.getElementById('goal-field').style.display = 'none';
+
             document.getElementById('edit-modal-title').textContent = `Edit ${type === 'weight' ? 'Weight' : 'Goal'}`;
             document.getElementById(`${type}-field`).style.display = 'block';
-            
-            // Esconde o outro campo
-            const otherField = type === 'weight' ? 'goal' : 'weight';
-            document.getElementById(`${otherField}-field`).style.display = 'none';
-            
+
             if (type === 'weight') {
-                document.getElementById('edit-weight').value = user.weight;
+                document.getElementById('edit-weight').value = user.weight || '';
             } else {
-                document.getElementById('edit-goal').value = user.goal;
+                document.getElementById('edit-goal').value = user.goal || 'lose-weight';
             }
-            
+
             editModal.style.display = 'flex';
         });
     });
 
-    // Edit Form Submission
+    // Edit Form Submission - Fixed Version
     document.getElementById('edit-form')?.addEventListener('submit', (e) => {
         e.preventDefault();
         const editModal = document.getElementById('edit-modal');
-        
-        if (document.getElementById('weight-field').style.display !== 'none') {
+        const weightField = document.getElementById('weight-field');
+        const goalField = document.getElementById('goal-field');
+
+        // Manual validation
+        if (weightField.style.display !== 'none') {
+            const weightValue = document.getElementById('edit-weight').value;
+            if (!weightValue || isNaN(weightValue)) {
+                showAlert('Please enter a valid weight', 'warning');
+                return;
+            }
+        }
+
+        if (weightField.style.display !== 'none') {
             const newWeight = parseFloat(document.getElementById('edit-weight').value);
             if (api.updateUser({ weight: newWeight })) {
                 showAlert(`Weight updated to ${newWeight}kg!`, 'success');
@@ -527,13 +537,13 @@ function setupEventListeners() {
             }
         } else {
             const newGoal = document.getElementById('edit-goal').value;
-            if (api.updateGoal(newGoal)) {
+            if (api.updateUser({ goal: newGoal })) {
                 showAlert(`Goal updated to ${newGoal.replace('-', ' ')}!`, 'success');
             } else {
                 showAlert('Failed to update goal', 'error');
             }
         }
-        
+
         editModal.style.display = 'none';
         loadDashboard();
     });
@@ -547,7 +557,7 @@ function setupEventListeners() {
         showAlert('Redirecting to activity log...', 'warning');
     });
 
-    // Fechar modal ao clicar fora
+    // Close modal when clicking outside
     window.addEventListener('click', (e) => {
         if (e.target.classList.contains('modal')) {
             document.querySelectorAll('.modal').forEach(modal => {

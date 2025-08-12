@@ -2,15 +2,55 @@
 export const api = {
     // Usuário
     getCurrentUser() {
-        const user = localStorage.getItem('fitnessUser');
-        return user ? JSON.parse(user) : null;
+        const user = JSON.parse(localStorage.getItem('currentUser'));
+        if (!user) {
+            console.warn('No logged in user found');
+            return {
+                name: 'User',
+                weight: 0,
+                goal: 'maintain',
+                weightHistory: []
+            };
+        }
+        return user;
     },
 
     updateUser(updatedData) {
-        const user = this.getCurrentUser() || {};
-        const updatedUser = {...user, ...updatedData};
-        localStorage.setItem('fitnessUser', JSON.stringify(updatedUser));
-        return updatedUser;
+        try {
+            const currentUser = this.getCurrentUser();
+            if (!currentUser) return false;
+
+            // Atualiza os dados do usuário
+            const updatedUser = {
+                ...currentUser,
+                ...updatedData
+            };
+
+            // Se estiver atualizando o peso, adiciona ao histórico
+            if (updatedData.weight !== undefined) {
+                updatedUser.weightHistory = updatedUser.weightHistory || [];
+                updatedUser.weightHistory.push({
+                    date: new Date().toISOString(),
+                    weight: updatedData.weight
+                });
+            }
+
+            // Atualiza no localStorage
+            localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+
+            // Atualiza também na lista de usuários (se necessário)
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const userIndex = users.findIndex(u => u.id === currentUser.id);
+            if (userIndex !== -1) {
+                users[userIndex] = updatedUser;
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+
+            return true;
+        } catch (error) {
+            console.error('Error updating user:', error);
+            return false;
+        }
     },
 
     updateGoal(newGoal) {
@@ -62,33 +102,54 @@ export const api = {
 
     // Nutrition
     getTodayMeals() {
-        const today = new Date().toDateString();
-        const meals = JSON.parse(localStorage.getItem('meals') || '[]');
-        return meals.filter(meal => new Date(meal.date).toDateString() === today);
+        const user = this.getCurrentUser();
+        if (!user) return [];
+        
+        const today = new Date().toISOString().split('T')[0];
+        return user.meals?.filter(meal => 
+            new Date(meal.date).toISOString().split('T')[0] === today
+        ) || [];
+    },
+
+    addMeal(meal) {
+        try {
+            const user = this.getCurrentUser();
+            if (!user) return false;
+
+            const meals = user.meals || [];
+            meals.push({
+                ...meal,
+                date: new Date().toISOString(),
+                id: Date.now().toString() // Garante que o ID é uma string única
+            });
+
+            return this.updateUser({ meals });
+        } catch (error) {
+            console.error('Error adding meal:', error);
+            return false;
+        }
+    },
+
+    removeMeal(mealId) {
+        try {
+            const user = this.getCurrentUser();
+            if (!user) return false;
+
+            const meals = user.meals || [];
+            const updatedMeals = meals.filter(meal => meal.id.toString() !== mealId.toString());
+            
+            return this.updateUser({ meals: updatedMeals });
+        } catch (error) {
+            console.error('Error removing meal:', error);
+            return false;
+        }
     },
 
     getAllMeals() {
         return JSON.parse(localStorage.getItem('meals') || '[]');
     },
 
-    addMeal(meal) {
-        const meals = this.getAllMeals();
-        const mealWithDate = {
-            ...meal,
-            date: new Date().toISOString(),
-            id: Date.now()
-        };
-        meals.push(mealWithDate);
-        localStorage.setItem('meals', JSON.stringify(meals));
-        return mealWithDate;
-    },
-
-    removeMeal(mealId) {
-        let meals = this.getAllMeals();
-        meals = meals.filter(meal => meal.id !== mealId);
-        localStorage.setItem('meals', JSON.stringify(meals));
-        return true;
-    },
+   
 
     // Water
     getWaterIntake() {

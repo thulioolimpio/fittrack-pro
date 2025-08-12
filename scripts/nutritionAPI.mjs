@@ -1,12 +1,24 @@
-const APP_ID = 'YOUR_NUTRITIONIX_APP_ID';
-const APP_KEY = 'YOUR_NUTRITIONIX_APP_KEY';
-
 export async function searchFoods(query) {
     try {
-        const response = await fetch(`https://api.nutritionix.com/v1_1/search/${query}?results=0:20&fields=item_name,brand_name,item_id,nf_calories,nf_total_fat,nf_protein,nf_total_carbohydrate&appId=${APP_ID}&appKey=${APP_KEY}`);
-        return await response.json();
+        const response = await fetch(
+            `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${query}&page_size=20&json=1`
+        );
+        const data = await response.json();
+        
+        // Mapeia os dados para um formato similar ao Nutritionix
+        const formattedFoods = data.products.map(product => ({
+            item_name: product.product_name || "Nome não disponível",
+            brand_name: product.brands || "Marca não disponível",
+            item_id: product.code || "Sem ID",
+            nf_calories: product.nutriments?.energy_kcal_100g || 0,
+            nf_total_fat: product.nutriments?.fat_100g || 0,
+            nf_protein: product.nutriments?.proteins_100g || 0,
+            nf_total_carbohydrate: product.nutriments?.carbohydrates_100g || 0,
+        }));
+
+        return formattedFoods;
     } catch (error) {
-        console.error('Error fetching food data:', error);
+        console.error('Erro ao buscar dados de alimentos:', error);
         return [];
     }
 }
