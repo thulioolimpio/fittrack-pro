@@ -341,7 +341,7 @@ function initRecipes() {
       protein: 45,
       carbs: 30,
       fat: 15,
-      image: "assets/images/meal-prep.jpg"
+      
     },
     {
       id: 2,
@@ -351,13 +351,12 @@ function initRecipes() {
       protein: 30,
       carbs: 40,
       fat: 5,
-      image: "assets/images/smoothie.jpg"
+      
     }
   ];
   
   document.getElementById('recipes-list').innerHTML = recipes.map(recipe => `
     <div class="card recipe-card">
-      <img src="${recipe.image}" alt="${recipe.name}">
       <div class="recipe-info">
         <h4>${recipe.name}</h4>
         <p>${recipe.servings} serving${recipe.servings > 1 ? 's' : ''} | ${recipe.calories} kcal each</p>
