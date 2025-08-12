@@ -72,12 +72,12 @@ let workoutData = {
         }
     ],
     exerciseLibrary: [
-        { name: 'Squat', muscleGroup: 'Legs, Glutes', isBodyweight: false, image: 'assets/images/squat.jpg' },
-        { name: 'Push Up', muscleGroup: 'Chest, Arms', isBodyweight: true, image: 'assets/images/pushup.jpg' },
-        { name: 'Bench Press', muscleGroup: 'Chest', isBodyweight: false, image: 'assets/images/benchpress.jpg' },
-        { name: 'Pull Up', muscleGroup: 'Back, Arms', isBodyweight: true, image: 'assets/images/pullup.jpg' },
-        { name: 'Deadlift', muscleGroup: 'Back, Legs', isBodyweight: false, image: 'assets/images/deadlift.jpg' },
-        { name: 'Lunges', muscleGroup: 'Legs, Glutes', isBodyweight: true, image: 'assets/images/lunges.jpg' }
+        { name: 'Squat', muscleGroup: 'Legs, Glutes', isBodyweight: false },
+        { name: 'Push Up', muscleGroup: 'Chest, Arms', isBodyweight: true },
+        { name: 'Bench Press', muscleGroup: 'Chest', isBodyweight: false },
+        { name: 'Pull Up', muscleGroup: 'Back, Arms', isBodyweight: true },
+        { name: 'Deadlift', muscleGroup: 'Back, Legs', isBodyweight: false },
+        { name: 'Lunges', muscleGroup: 'Legs, Glutes', isBodyweight: true }
     ]
 };
 
@@ -310,8 +310,7 @@ export function loadWorkoutPage() {
             workoutData.exerciseLibrary.push({
                 name: exerciseName,
                 muscleGroup: muscleGroup,
-                isBodyweight: isBodyweight,
-                image: 'assets/images/default.jpg'
+                isBodyweight: isBodyweight
             });
         }
         
@@ -567,7 +566,6 @@ function renderExerciseLibrary(searchTerm = '') {
         exerciseCard.className = 'card exercise-item';
         
         exerciseCard.innerHTML = `
-            <img src="${exercise.image}" alt="${exercise.name}" onerror="this.src='assets/images/default.jpg'">
             <div class="exercise-info">
                 <h4>${exercise.name}</h4>
                 <p>${exercise.muscleGroup}</p>

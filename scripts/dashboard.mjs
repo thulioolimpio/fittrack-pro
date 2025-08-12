@@ -1,5 +1,78 @@
 import { api } from './api.mjs';
 
+// Atividades padrão como fallback
+const DEFAULT_ACTIVITIES = [
+    {
+        activity: "Go for a 15-minute walk outside",
+        type: "recreational",
+        participants: 1
+    },
+    {
+        activity: "Read a chapter of a book you've been meaning to read",
+        type: "educational",
+        participants: 1
+    },
+    {
+        activity: "Do 3 sets of 10 push-ups",
+        type: "exercise",
+        participants: 1
+    },
+    {
+        activity: "Drink a glass of water and stretch for 5 minutes",
+        type: "health",
+        participants: 1
+    }
+];
+
+// Função robusta para buscar atividades
+async function fetchRandomActivity() {
+    // Se estiver em desenvolvimento local, usar fallback imediatamente
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        console.log("Modo desenvolvimento: usando atividade local");
+        return getRandomDefaultActivity();
+    }
+
+    try {
+        // Configurar timeout para a requisição
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // Timeout de 5 segundos
+        
+        const response = await fetch('https://www.boredapi.com/api/activity', {
+            signal: controller.signal,
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+        
+        clearTimeout(timeoutId);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        // Verificar se os dados recebidos são válidos
+        if (!data.activity || !data.type) {
+            throw new Error("Invalid activity data received");
+        }
+        
+        return {
+            activity: data.activity,
+            type: data.type,
+            participants: data.participants || 1
+        };
+    } catch (error) {
+        console.warn("Error fetching activity from API, using fallback:", error);
+        return getRandomDefaultActivity();
+    }
+}
+
+function getRandomDefaultActivity() {
+    return DEFAULT_ACTIVITIES[Math.floor(Math.random() * DEFAULT_ACTIVITIES.length)];
+}
+
 // Helper Functions
 function showAlert(message, type = 'success') {
     const alertEl = document.createElement('div');
@@ -42,7 +115,7 @@ function showConfirm(message, callback) {
     });
 }
 
-export function loadDashboard() {
+export async function loadDashboard() {
     // Load CSS
     const link = document.createElement('link');
     link.rel = 'stylesheet';
@@ -54,6 +127,18 @@ export function loadDashboard() {
     const todayWorkout = api.getTodayWorkout();
     const todayMeals = api.getTodayMeals();
     const waterIntake = api.getWaterIntake();
+    
+    // Busca atividade assíncrona sem bloquear a renderização
+    let randomActivity = getRandomDefaultActivity(); // Valor inicial padrão
+    
+    // Inicia a busca pela atividade mas não espera por ela
+    fetchRandomActivity().then(activity => {
+        randomActivity = activity;
+        // Atualiza a UI se já estiver renderizada
+        updateActivitySuggestion(activity);
+    }).catch(error => {
+        console.error("Error loading activity:", error);
+    });
 
     // Calculate nutrition totals
     const nutritionTotals = todayMeals.reduce((acc, meal) => {
@@ -73,7 +158,7 @@ export function loadDashboard() {
         <section class="dashboard">
             <div class="dashboard-header">
                 <div class="header-text">
-                    <h2>Welcome , ${user.name}</h2>
+                    <h2>Welcome, ${user.name}</h2>
                     <p>Today is ${new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
                 </div>
                 <div class="user-stats">
@@ -220,7 +305,7 @@ export function loadDashboard() {
                     </div>
                 </div>
                 
-                <!-- Quick Actions Card -->
+                <!-- Quick Actions Card - Modificada com a Bored API -->
                 <div class="card quick-actions">
                     <h3>Quick Actions</h3>
                     <div class="action-buttons">
@@ -230,6 +315,15 @@ export function loadDashboard() {
                             </svg>
                             Quick Workout
                         </button>
+                        <button class="button button-secondary" id="random-activity">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+                                <line x1="9" y1="9" x2="9.01" y2="9"/>
+                                <line x1="15" y1="9" x2="15.01" y2="9"/>
+                            </svg>
+                            Random Activity
+                        </button>
                         <button class="button button-secondary" id="log-water">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                 <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
@@ -238,17 +332,11 @@ export function loadDashboard() {
                             </svg>
                             Log Water
                         </button>
-                        <button class="button button-secondary" id="view-plan">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                <path d="M3 3h18v18H3z"/>
-                                <path d="M7 16h10M7 12h10M7 8h10"/>
-                            </svg>
-                            View Plan
-                        </button>
                     </div>
-                    <div class="motivational-quote">
-                        <p>"The secret of getting ahead is getting started."</p>
-                        <small>- Mark Twain</small>
+                    <div class="activity-suggestion">
+                        <h4>Feeling bored?</h4>
+                        <p>${randomActivity.activity}</p>
+                        <small>Type: ${randomActivity.type} | Participants: ${randomActivity.participants}</small>
                     </div>
                 </div>
             </div>
@@ -319,7 +407,7 @@ export function loadDashboard() {
             </div>
         </div>
         
-        <!-- Edit Weight/Goal Modal - Fixed Version -->
+        <!-- Edit Weight/Goal Modal -->
         <div id="edit-modal" class="modal">
             <div class="modal-content">
                 <span class="close-modal">&times;</span>
@@ -357,24 +445,28 @@ function initWeightChart() {
     }
 }
 
-function setupEventListeners() {
+function updateActivitySuggestion(activity) {
+    const activityElement = document.querySelector('.activity-suggestion');
+    if (activityElement) {
+        activityElement.innerHTML = `
+            <h4>Feeling bored?</h4>
+            <p>${activity.activity}</p>
+            <small>Type: ${activity.type} | Participants: ${activity.participants}</small>
+        `;
+    }
+}
+
+async function setupEventListeners() {
     // Start Workout
     document.getElementById('plan-workout')?.addEventListener('click', async () => {
-    try {
-        const { loadPlannerPage } = await import('./planner.mjs');
-        loadPlannerPage(); // Note que agora usamos o nome correto da função
-    } catch (error) {
-        console.error('Error loading planner:', error);
-        showAlert('Failed to load workout planner', 'error');
-        
-        // Fallback alternativo caso ainda haja problemas
-        window.location.href = './planner.html';
-    }
-});
-
-    // Plan Workout
-    document.getElementById('plan-workout')?.addEventListener('click', () => {
-        showAlert('Redirecting to workout planner...', 'warning');
+        try {
+            const { loadPlannerPage } = await import('./planner.mjs');
+            loadPlannerPage();
+        } catch (error) {
+            console.error('Error loading planner:', error);
+            showAlert('Failed to load workout planner', 'error');
+            window.location.href = './planner.html';
+        }
     });
 
     // Log Meal
@@ -410,19 +502,16 @@ function setupEventListeners() {
     });
 
     // Delete Meal
-    // No setupEventListeners() do dashboard.mjs
-
-    // Delete Meal - Versão corrigida
     document.querySelectorAll('.delete-meal').forEach(btn => {
         btn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Impede a propagação do evento
+            e.stopPropagation();
             const mealId = e.currentTarget.getAttribute('data-meal-id');
 
             showConfirm('Are you sure you want to delete this meal?', async () => {
                 try {
                     if (await api.removeMeal(mealId)) {
                         showAlert('Meal deleted successfully!', 'success');
-                        loadDashboard(); // Recarrega o dashboard para mostrar as atualizações
+                        loadDashboard();
                     } else {
                         showAlert('Failed to delete meal', 'error');
                     }
@@ -433,6 +522,7 @@ function setupEventListeners() {
             });
         });
     });
+
     // Complete Exercise
     document.querySelectorAll('.complete-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -451,6 +541,34 @@ function setupEventListeners() {
         showConfirm('Start a 15-minute quick workout?', () => {
             showAlert('Quick workout started! Timer: 15:00', 'success');
         });
+    });
+
+    // Random Activity Button
+    document.getElementById('random-activity')?.addEventListener('click', async () => {
+        const button = document.getElementById('random-activity');
+        const originalText = button.innerHTML;
+        
+        // Feedback visual
+        button.innerHTML = `
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+            </svg>
+            Loading...
+        `;
+        button.disabled = true;
+
+        try {
+            const activity = await fetchRandomActivity();
+            showAlert(`Try this: ${activity.activity}`, 'success');
+            updateActivitySuggestion(activity);
+        } catch (error) {
+            console.error("Error fetching activity:", error);
+            showAlert("Couldn't load a new activity. Try again later.", 'error');
+        } finally {
+            // Restore button
+            button.innerHTML = originalText;
+            button.disabled = false;
+        }
     });
 
     document.getElementById('log-water')?.addEventListener('click', () => {
@@ -491,14 +609,13 @@ function setupEventListeners() {
         showAlert('Redirecting to your workout and nutrition plan...', 'warning');
     });
 
-    // Edit Buttons (Weight/Goal) - Fixed Version
+    // Edit Buttons (Weight/Goal)
     document.querySelectorAll('.edit-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const type = e.currentTarget.getAttribute('data-type');
             const editModal = document.getElementById('edit-modal');
             const user = api.getCurrentUser();
 
-            // Reset form and hide all fields first
             document.getElementById('edit-form').reset();
             document.getElementById('weight-field').style.display = 'none';
             document.getElementById('goal-field').style.display = 'none';
@@ -516,14 +633,13 @@ function setupEventListeners() {
         });
     });
 
-    // Edit Form Submission - Fixed Version
+    // Edit Form Submission
     document.getElementById('edit-form')?.addEventListener('submit', (e) => {
         e.preventDefault();
         const editModal = document.getElementById('edit-modal');
         const weightField = document.getElementById('weight-field');
         const goalField = document.getElementById('goal-field');
 
-        // Manual validation
         if (weightField.style.display !== 'none') {
             const weightValue = document.getElementById('edit-weight').value;
             if (!weightValue || isNaN(weightValue)) {
