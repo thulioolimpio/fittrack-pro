@@ -127,7 +127,6 @@ export function initializeAuth() {
             email: registerForm.querySelector('input[type="email"]').value,
             password: registerForm.querySelector('input[type="password"]').value,
             age: registerForm.querySelector('input[placeholder="Age"]').value,
-            height: registerForm.querySelector('input[placeholder="Height (cm)"]').value,
             weight: registerForm.querySelector('input[placeholder="Weight (kg)"]').value,
             goal: document.getElementById('fitness-goal').value
         };
